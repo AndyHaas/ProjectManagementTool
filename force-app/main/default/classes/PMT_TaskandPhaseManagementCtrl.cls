@@ -9,7 +9,7 @@
 
 public with Sharing class PMT_TaskandPhaseManagementCtrl{
     
-    /*************************************************
+/*************************************************
 * Name: CreateTasksWrapper
 * Used by : PMT_CreateMultiTasks.cmp
 * ***********************************************/
@@ -20,7 +20,7 @@ public with Sharing class PMT_TaskandPhaseManagementCtrl{
         @AuraEnabled public List<Map<String, String>> memberList;      
     }
     
-    /************************************************
+/************************************************
 * Method Name: getTaskWrapper 
 * Description: Get tasks for the current project
 * Component(s): PMT_CreateMultiTasks.cmp
@@ -76,9 +76,15 @@ public with Sharing class PMT_TaskandPhaseManagementCtrl{
     private static List<Map<String, String>> getMemberList(ID projectId) {    
         List<Map<String, String>> items = new List<Map<String, String>>();  
         Set<Id> uniqueUserIds = new Set<Id>();
-        for (PMT_Resource_Allocation__c mb : [SELECT id, Allocated_Resource_Id__c, Resource_Name__c FROM PMT_Resource_Allocation__c WHERE Project__c =:projectId and Resource_IsActive__c = true limit :limits.getLimitQueryRows()]){
-            if(uniqueUserIds.add(mb.Allocated_Resource_Id__c)){
-                items.add(new Map<String, String>{'value' => mb.Allocated_Resource_Id__c, 'label'=> mb.Resource_Name__c});
+        // for (PMT_Resource_Allocation__c mb : [SELECT id, Allocated_Resource_Id__c, Resource_Name__c FROM PMT_Resource_Allocation__c WHERE Project__c =:projectId and Resource_IsActive__c = true limit :limits.getLimitQueryRows()]){
+        //     if(uniqueUserIds.add(mb.Allocated_Resource_Id__c)){
+        //         items.add(new Map<String, String>{'value' => mb.Allocated_Resource_Id__c, 'label'=> mb.Resource_Name__c});
+        //     }
+        // }
+
+        for (User mb : [SELECT Id, Name FROM User WHERE IsActive = TRUE limit :limits.getLimitQueryRows()]){
+            if(uniqueUserIds.add(mb.Id)){
+                items.add(new Map<String, String>{'value' => mb.Id, 'label'=> mb.Name});
             }
         }
         
